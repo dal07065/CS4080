@@ -16,7 +16,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#define LAST 10
+#include <time.h>
 
 int row1 = 0;
 int col1 = 0;
@@ -70,7 +70,7 @@ void matrixInput(float ***matrix1, float ***matrix2)
     // Ask the user to enter content for each matrices
     for (int i = 0; i < row1; i++)
     {
-        printf("Enter row %d for matrix 2:", i);
+        printf("Enter row %d for matrix 1:", i);
         printf("\n");
         for (int j = 0; j < col1; j++)
         {
@@ -128,6 +128,7 @@ float** addition(float*** matrix1, float*** matrix2)
     }
     else
     {
+        // Initialize Resulting Matrix
         float **mFinal = malloc(row1 * sizeof(float*));
         for(int i = 0; i < row1; i++)
         {
@@ -137,13 +138,14 @@ float** addition(float*** matrix1, float*** matrix2)
                 (mFinal)[i][j] = 0;
             }
         }
-            
-        //printMatrix(&mFinal, row1, col1);
+
+        // Print Current Matrices
         printf("Current Matrix 1: \n");
         printMatrix(&(*matrix1), row1, col1);
         printf("Current Matrix 2: \n");
         printMatrix(&(*matrix2), row2, col2);
 
+        // Add Matrices
         for (int i = 0; i < row1; i++)
         {
             for (int j = 0; j < col1; j++)
@@ -152,6 +154,8 @@ float** addition(float*** matrix1, float*** matrix2)
                 (mFinal)[i][j] = (*matrix1)[i][j] + (*matrix2)[i][j];
             }
         }
+
+        // Print Resulting Matrix
         printf("\n");
         printf("Final Matrix After Addition: \n");
         printMatrix(&mFinal, row1, col1);
@@ -170,6 +174,7 @@ float** subtract(float*** matrix1, float*** matrix2)
     }
     else
     {
+        // Initialize Resulting Matrix
         float **mFinal = malloc(row1 * sizeof(float*));
         for(int i = 0; i < row1; i++)
         {
@@ -180,7 +185,7 @@ float** subtract(float*** matrix1, float*** matrix2)
             }
         }
             
-        //printMatrix(&mFinal, row1, col1);
+        // Print Current Matrices
         printf("Current Matrix 1: \n");
         printMatrix(&(*matrix1), row1, col1);
         printf("Current Matrix 2: \n");
@@ -194,6 +199,8 @@ float** subtract(float*** matrix1, float*** matrix2)
                 (mFinal)[i][j] = (*matrix1)[i][j] - (*matrix2)[i][j];
             }
         }
+
+        // Print Final Matrix
         printf("\n");
         printf("Final Matrix After Subtraction: \n");
         printMatrix(&mFinal, row1, col1);
@@ -212,6 +219,7 @@ float** multiply(float*** matrix1, float*** matrix2)
     }
     else
     {
+        // Initialize Resulting Matrix
         float **mFinal = malloc(row1 * sizeof(float*));
         for(int i = 0; i < row1; i++)
         {
@@ -222,11 +230,13 @@ float** multiply(float*** matrix1, float*** matrix2)
             }
         }
 
+        // Print Matrices
         printf("Current Matrix 1: \n");
         printMatrix(&(*matrix1), row1, col1);
         printf("Current Matrix 2: \n");
         printMatrix(&(*matrix2), row2, col2);
 
+        // Multiply Matrices
         for (int i = 0; i < row1; i++)
         {
             for (int j = 0; j < col2; j++)
@@ -235,6 +245,8 @@ float** multiply(float*** matrix1, float*** matrix2)
                     mFinal[i][j] += (*matrix1)[i][z] * (*matrix2)[z][j];
             }
         }
+
+        // Print Final Matrix
         printf("Final Matrix After Multiplication: \n");
         printMatrix(&mFinal, row1, col2);
         return mFinal;
@@ -251,12 +263,6 @@ int main()
     float** multResult = NULL;
 
     matrixInput(&matrix1, &matrix2);
-    // Show menu
-    // - add matrix
-    // - subtract matrix
-    // - multiply matrix
-    // - enter two new matrices
-    // - exit menu
 
     printf("\n");
 
@@ -296,7 +302,18 @@ int main()
                 break;
             case 3:
                 if(multResult == NULL)
+                {
+                    // Start timer and print execution time
+                    int msec = 0;
+                    clock_t start = clock();
+
                     multResult = multiply(&matrix1, &matrix2);
+
+                    double cpu_time_used = ((double)(clock() - start)) / CLOCKS_PER_SEC;
+
+                    printf("Time taken %f seconds \n", cpu_time_used);
+                    
+                }
                 else
                 {
                     printf("Final Matrix After Multiplication: \n");
@@ -328,25 +345,6 @@ int main()
         }
 
     }
-
-
-
-
-    // result of every operation is printed out after the operation is chosen
-
-    // int row = 3;
-    // int column = 3;
-
-    // for (int i = 0; i < row * column; i++)
-    //     array[i] = i + 1;
-
-    // for (int i = 0; i < row; i++) {
-    //     for (int j = 0; j < column; j++)
-    //     {
-    //         printf("%d ", array[i * column + j]);
-    //     }
-    //     printf("\n");
-    // }
 
     free(matrix1);
     free(matrix2);
